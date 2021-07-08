@@ -20,13 +20,23 @@ namespace AzFunction
             log.LogInformation("Azure function received the payment");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
+            var order = JsonConvert.DeserializeObject<Order>(requestBody);
 
+            log.LogInformation($"Order ID:  {order.OrderId} Order Email: {order.Email} Product ID: {order.ProductId}");
             //string responseMessage = string.IsNullOrEmpty(name)
             //    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
             //    : $"Hello, {name}. This HTTP triggered function executed successfully.";
 
             return new OkObjectResult("Azure function processed the payment. Thanks!");
         }
+    }
+
+    public class Order
+    {
+        public string OrderId { get; set; }
+        public string Description { get; set; }
+        public string ProductId { get; set; }
+        public string Email { get; set; }
+        public decimal Price { get; set; }
     }
 }
